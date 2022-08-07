@@ -489,6 +489,18 @@ service MlflowService {
       rpc_doc_title: "Log Model",
     };
   }
+
+  rpc getProjects (GetProjects) returns (GetProjects.Response) {
+    option (rpc) = {
+      endpoints: [{
+        method: "GET",
+        path: "/mlflow/custom/projects/get"
+        since { major: 2, minor: 0 },
+      }],
+      visibility: PUBLIC,
+      rpc_doc_title: "Get Projects",
+    };
+  }
 }
 
 // View type for ListExperiments query.
@@ -1078,5 +1090,23 @@ message GetExperimentByName {
   message Response {
     // Experiment details.
     optional Experiment experiment = 1;
+  }
+}
+
+// Project
+message Project {
+  // Unique google drive identifier for the project.
+  optional string project_id = 1;
+
+  // Human readable name that identifies the project.
+  optional string name = 2;
+}
+
+message GetProjects {
+  option (scalapb.message).extends = "com.databricks.rpc.RPC[$this.Response]";
+
+  message Response {
+    // All projects.
+    repeated Project projects = 1;
   }
 }
